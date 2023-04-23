@@ -58,37 +58,37 @@ RSpec.describe 'Merchants Bulk Discount show page' do
   describe 'Page display' do
     it 'displays merchant bulk discounts name and attributes' do
       visit merchant_bulk_discount_path(merchant, bulk_discount_1)
-
-      except(page).to have_content("#{bulk_discount_1.name}'s Show page")
+      
+      expect(page).to have_content("#{bulk_discount_1.name}'s Show page")
       expect(page).to have_content("Percentage discount:")
-      except(page).to have_content("%#{bulk_discount_1.percentage_discount}")
+      expect(page).to have_content("#{bulk_discount_1.percentage_discount}%")
       expect(page).to have_content("Quantity threshold:")
-      except(page).to have_content("#{bulk_discount_1.quantity_threshold}")
+      expect(page).to have_content("#{bulk_discount_1.quantity_threshold}")
 
-      except(page).to_not have_content("#{bulk_discount_2.name}'s Show page")
-      except(page).to_not have_content("#{bulk_discount_3.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_2.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_3.name}'s Show page")
 
       visit merchant_bulk_discount_path(merchant, bulk_discount_2)
 
-      except(page).to have_content("#{bulk_discount_2.name}'s Show page")
+      expect(page).to have_content("#{bulk_discount_2.name}'s Show page")
       expect(page).to have_content("Percentage discount:")
-      except(page).to have_content("%#{bulk_discount_2.percentage_discount}")
+      expect(page).to have_content("#{bulk_discount_2.percentage_discount}%")
       expect(page).to have_content("Quantity threshold:")
-      except(page).to have_content("#{bulk_discount_2.quantity_threshold}")
+      expect(page).to have_content("#{bulk_discount_2.quantity_threshold}")
 
-      except(page).to_not have_content("#{bulk_discount_1.name}'s Show page")
-      except(page).to_not have_content("#{bulk_discount_3.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_1.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_3.name}'s Show page")
 
       visit merchant_bulk_discount_path(merchant_1, bulk_discount_3)
 
-      except(page).to have_content("#{bulk_discount_3.name}'s Show page")
+      expect(page).to have_content("#{bulk_discount_3.name}'s Show page")
       expect(page).to have_content("Percentage discount:")
-      except(page).to have_content("%#{bulk_discount_3.percentage_discount}")
+      expect(page).to have_content("#{bulk_discount_3.percentage_discount}%")
       expect(page).to have_content("Quantity threshold:")
-      except(page).to have_content("#{bulk_discount_3.quantity_threshold}")
+      expect(page).to have_content("#{bulk_discount_3.quantity_threshold}")
 
-      except(page).to_not have_content("#{bulk_discount_1.name}'s Show page")
-      except(page).to_not have_content("#{bulk_discount_2.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_1.name}'s Show page")
+      expect(page).to_not have_content("#{bulk_discount_2.name}'s Show page")
     end
   end
 end
