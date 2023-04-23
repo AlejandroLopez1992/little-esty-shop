@@ -55,35 +55,35 @@ RSpec.describe 'Merchants Bulk Discount index page' do
   let!(:bulk_discount_3) { create(:bulk_discount, merchant_id: merchant_1.id) }
 
 
-  describe 'Page dispplay do' do
+  describe 'Page display do' do
     it 'displays all bulk discounts for this merchant & bulk discount name is a link' do
       visit merchant_bulk_discounts_path(merchant)
-  
+      
       within("li#bulk_discount_#{bulk_discount_1.id}") do
-        except(page).to have_content(bulk_discount_1.name)
+        expect(page).to have_content(bulk_discount_1.name)
         expect(page).to have_link(bulk_discount_1.name)
         expect(page).to have_content(bulk_discount_1.percentage_discount)
-        except(page).to have_content(bulk_discount_1.quantity_threshold)
+        expect(page).to have_content(bulk_discount_1.quantity_threshold)
       end
 
       within("li#bulk_discount_#{bulk_discount_2.id}") do
-        except(page).to have_content(bulk_discount_2.name)
+        expect(page).to have_content(bulk_discount_2.name)
         expect(page).to have_link(bulk_discount_2.name)
         expect(page).to have_content(bulk_discount_2.percentage_discount)
-        except(page).to have_content(bulk_discount_2.quantity_threshold)
+        expect(page).to have_content(bulk_discount_2.quantity_threshold)
       end
 
-      expect(page).to not have_content(bulk_discount_3.name)
-      expect(page).to not have_content(bulk_discount_3.percentage_discount)
-      expect(page).to not have_content(bulk_discount_3.quantity_threshold)
+      expect(page).to_not have_content(bulk_discount_3.name)
+      expect(page).to_not have_content(bulk_discount_3.percentage_discount)
+      expect(page).to_not have_content(bulk_discount_3.quantity_threshold)
 
       visit merchant_bulk_discounts_path(merchant_1)
 
       within("li#bulk_discount_#{bulk_discount_3.id}") do
-        except(page).to have_content(bulk_discount_3.name)
+        expect(page).to have_content(bulk_discount_3.name)
         expect(page).to have_link(bulk_discount_3.name)
         expect(page).to have_content(bulk_discount_3.percentage_discount)
-        except(page).to have_content(bulk_discount_3.quantity_threshold)
+        expect(page).to have_content(bulk_discount_3.quantity_threshold)
       end
     end
 
@@ -96,6 +96,8 @@ RSpec.describe 'Merchants Bulk Discount index page' do
         click_link(bulk_discount_1.name)
         expect(current_path).to eq(merchant_bulk_discount_path(merchant, bulk_discount_1))
       end
+
+      visit merchant_bulk_discounts_path(merchant)
 
       within("li#bulk_discount_#{bulk_discount_2.id}") do
         expect(page).to have_link(bulk_discount_2.name)
@@ -110,7 +112,7 @@ RSpec.describe 'Merchants Bulk Discount index page' do
         expect(page).to have_link(bulk_discount_3.name)
     
         click_link(bulk_discount_3.name)
-        expect(current_path).to eq(merchant_bulk_discount_path(merchant, bulk_discount_3))
+        expect(current_path).to eq(merchant_bulk_discount_path(merchant_1, bulk_discount_3))
       end
     end
   end
