@@ -1,4 +1,11 @@
-<h2><%= @merchant.name %></h2> <%= image_tag @merchant_image.image_url, cache: true %>
+<h2><%= @merchant.name %></h2> 
+<%# <%= image_tag @merchant_image.image_url, cache: true %> 
+
+<div class="bulk_discounts_column">
+  <%= content_tag :div, id: "bulk_discounts_link" do %>
+  <%= link_to "View my discounts", merchant_bulk_discounts_path(@merchant) %>
+  <% end %>
+</div>
 
 <div class="item_column">
   <%= content_tag :div, id: "item_index" do %>

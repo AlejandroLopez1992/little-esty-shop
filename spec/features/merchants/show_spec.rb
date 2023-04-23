@@ -232,4 +232,27 @@ RSpec.describe 'Merchant Dashboard/Show Page' do
       expect('Wednesday, April 12, 2023').to appear_before('Thursday, April 13, 2023')
     end
   end
+
+  describe 'Bulk Discounts link' do
+    let!(:bulk_discount_1) { create(:bulk_discount, merchant_id: merchant.id) }
+    let!(:bulk_discount_2) { create(:bulk_discount, merchant_id: merchant.id) }
+
+    it 'displays a link to view all discounts and when link is clicked redirects to bulk discounts index page' do
+      visit "/merchants/#{merchant.id}/dashboard"
+      
+      within("#bulk_discounts_link") do
+        expect(page).to have_content("View my discounts")
+        click_link("View my discounts")
+        expect(current_path).to eq(merchant_bulk_discounts_path(merchant))
+      end
+
+      visit "/merchants/#{merchant_1.id}/dashboard"
+      
+      within("#bulk_discounts_link") do
+        expect(page).to have_content("View my discounts")
+        click_link("View my discounts")
+        expect(current_path).to eq(merchant_bulk_discounts_path(merchant_1))
+      end
+    end
+  end
 end
