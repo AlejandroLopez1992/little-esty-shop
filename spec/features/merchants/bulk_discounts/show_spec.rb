@@ -90,5 +90,24 @@ RSpec.describe 'Merchants Bulk Discount show page' do
       expect(page).to_not have_content("#{bulk_discount_1.name}'s Show page")
       expect(page).to_not have_content("#{bulk_discount_2.name}'s Show page")
     end
+
+    it 'has a link to edit the bulk discount' do
+      visit merchant_bulk_discount_path(merchant, bulk_discount_1)
+      
+      within("#edit_bulk_discount") do
+        expect(page).to have_link("Edit #{bulk_discount_1.name}")
+      end
+    end
+
+    it 'when link is clicked page is redirected to edit form page' do
+      visit merchant_bulk_discount_path(merchant, bulk_discount_1)
+
+
+      within("#edit_bulk_discount") do
+        click_link("Edit #{bulk_discount_1.name}")
+
+        expect(current_path).to eq(edit_merchant_bulk_discount_path(merchant, bulk_discount_1))
+      end
+    end
   end
 end

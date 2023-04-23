@@ -5,6 +5,7 @@ class Merchant::BulkDiscountsController < ApplicationController
   end
 
   def show
+    @merchant = Merchant.find(params[:merchant_id])
     @bulk_discount = BulkDiscount.find(params[:id])
   end
 
@@ -23,6 +24,15 @@ class Merchant::BulkDiscountsController < ApplicationController
       flash[:alret] = "Bulk discount not created: name must be filled out and please ensure input for quantity threshold/percentage discount are integers. Additionally percentage discount must be from 1-99"
       redirect_to new_merchant_bulk_discount_path(@merchant)
     end
+  end
+
+  def edit
+    @merchant = Merchant.find(params[:merchant_id])
+    @bulk_discount = BulkDiscount.find(params[:id])
+  end
+
+  def update
+
   end
 
   def destroy
