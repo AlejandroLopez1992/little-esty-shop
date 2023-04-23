@@ -116,4 +116,38 @@ RSpec.describe 'Merchants Bulk Discount index page' do
       end
     end
   end
+
+  describe 'Bulk discount Create' do
+    it 'index page for merchants shows a link to create a new discount' do
+      visit merchant_bulk_discounts_path(merchant)
+
+      within("#bulk_discount_create") do
+        expect(page).to have_link("Create Bulk discount")
+      end
+
+      visit merchant_bulk_discounts_path(merchant_1)
+
+      within("#bulk_discount_create") do
+        expect(page).to have_link("Create Bulk discount")
+      end
+    end
+
+    it 'clicking the link redirects to form to create new bulk_discount' do
+      visit merchant_bulk_discounts_path(merchant)
+
+      within("#bulk_discount_create") do
+        click_link("Create Bulk discount")
+
+        expect(current_path).to eq(new_merchant_bulk_discount_path(merchant))
+      end
+
+      visit merchant_bulk_discounts_path(merchant_1)
+
+      within("#bulk_discount_create") do
+        click_link("Create Bulk discount")
+
+        expect(current_path).to eq(new_merchant_bulk_discount_path(merchant_1))
+      end
+    end
+  end
 end
