@@ -32,7 +32,15 @@ class Merchant::BulkDiscountsController < ApplicationController
   end
 
   def update
-
+    @merchant = Merchant.find(params[:merchant_id])
+    @bulk_discount = BulkDiscount.find(params[:id])
+    if @bulk_discount.update(bulk_discount_params)
+      redirect_to merchant_bulk_discount_path(@merchant, @bulk_discount)
+      flash[:notice] = "Bulk discount updated succesfully"
+    else
+      redirect_to edit_merchant_bulk_discount_path(@merchant, @bulk_discount)
+      flash[:alert] = "Bulk discount not updated: name must be filled out and please ensure input for quantity threshold/percentage discount are integers. Additionally percentage discount must be from 1-99"
+    end
   end
 
   def destroy

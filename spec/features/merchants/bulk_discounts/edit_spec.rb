@@ -57,7 +57,7 @@ RSpec.describe 'Merchant bulk_discounts edit page' do
   describe "Edit form" do
     it 'exists and has bulk discount attributes pre-filled' do
       visit edit_merchant_bulk_discount_path(merchant, bulk_discount_1)
-
+      
       expect(page).to have_content("Edit #{bulk_discount_1.name}'s Information:")
       expect(page).to have_content("Name:")
       expect(find_field('bulk_discount_name').value).to match("#{bulk_discount_1.name}")
