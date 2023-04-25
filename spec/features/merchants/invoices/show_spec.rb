@@ -34,7 +34,12 @@ let!(:invoice_5) { create(:invoice, customer_id: customer_5.id) }
 let!(:invoice_6) { create(:invoice, customer_id: customer_6.id) }
 let!(:invoice_7) { create(:invoice, customer_id: customer_6.id) }
 
-let!(:invoice_item_1) { create(:invoice_item, item_id: item_1.id, invoice_id: invoice_1.id, status: 0, unit_price: 6000, quantity: 3) }
+let!(:bulk_discount_1) { create(:bulk_discount, merchant_id: merchant.id, name: "Green Special", percentage_discount: 20, quantity_threshold: 5) }
+let!(:bulk_discount_2) { create(:bulk_discount, merchant_id: merchant.id, name: "Red Special", percentage_discount: 35, quantity_threshold: 10) }
+let!(:bulk_discount_3) { create(:bulk_discount, merchant_id: merchant.id, name: "Yellow Special", percentage_discount: 50, quantity_threshold: 15) }
+let!(:bulk_discount_4) { create(:bulk_discount, merchant_id: merchant_1.id, name: "Blue Special", percentage_discount: 25, quantity_threshold: 5) }
+
+let!(:invoice_item_1) { create(:invoice_item, item_id: item_1.id, invoice_id: invoice_1.id, status: 0, unit_price: 6000, quantity: 5) }
 let!(:invoice_item_2) { create(:invoice_item, item_id: item_2.id, invoice_id: invoice_2.id, status: 2) }
 let!(:invoice_item_3) { create(:invoice_item, item_id: item_3.id, invoice_id: invoice_3.id, status: 2) }
 let!(:invoice_item_4) { create(:invoice_item, item_id: item_4.id, invoice_id: invoice_4.id, status: 0) }
@@ -78,11 +83,21 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
     it 'should display the total revenue of items on the invoice' do
       visit merchant_invoice_path(merchant, invoice_1.id)
       
-      expect(page).to have_content("Total Revenue: $180.0")
+      expect(page).to have_content("Total Revenue: $300.0")
       
       visit merchant_invoice_path(merchant, invoice_6.id)
       
       expect(page).to have_content("Total Revenue: $999.88")
+    end
+
+    it 'should display the bulk_discount_total_revenue of the invoice' do
+      visit merchant_invoice_path(merchant, invoice_1.id)
+
+      expect(page).to have_content("Total Bulk Discounted Revenue: $240.0")
+      
+      visit merchant_invoice_path(merchant, invoice_6.id)
+      
+      expect(page).to have_content("Total Bulk Discounted Revenue: $737.92")
     end
   end
 
@@ -160,5 +175,3 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
     end
   end
 end
-
-#save_and_open_page
