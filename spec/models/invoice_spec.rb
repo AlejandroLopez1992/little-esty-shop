@@ -15,6 +15,7 @@ RSpec.describe Invoice, type: :model do
   describe '#instance methods' do
     before(:each) do
       @merchant = create(:merchant)
+      @merchant_1 = create(:merchant)
 
       @customer_1 = create(:customer)
       @customer_2 = create(:customer)
@@ -31,7 +32,12 @@ RSpec.describe Invoice, type: :model do
       @item_5 = create(:item, unit_price: 31035, merchant_id: @merchant.id)
       @item_6 = create(:item, unit_price: 65208, merchant_id: @merchant.id)
       @item_7 = create(:item, unit_price: 94741, merchant_id: @merchant.id)
-      
+
+      @bulk_discount_1 = create(:bulk_discount, merchant_id: @merchant.id, name: "Green Special", percentage_discount: 20, quantity_threshold: 5)
+      @bulk_discount_2 = create(:bulk_discount, merchant_id: @merchant.id, name: "Red Special", percentage_discount: 35, quantity_threshold: 10)
+      @bulk_discount_3 = create(:bulk_discount, merchant_id: @merchant.id, name: "Yellow Special", percentage_discount: 50, quantity_threshold: 15)
+      @bulk_discount_4 = create(:bulk_discount, merchant_id: @merchant_1.id, name: "Blue Special", percentage_discount: 25, quantity_threshold: 5)
+
       static_time_1 = Time.zone.parse('2023-04-13 00:50:37')
       static_time_2 = Time.zone.parse('2023-04-12 00:50:37')
       static_time_3 = Time.zone.parse('2023-04-11 00:50:37')
@@ -47,6 +53,7 @@ RSpec.describe Invoice, type: :model do
 
       create(:invoice_item, unit_price: 45546, quantity: 7, invoice_id: @invoice_1.id, item_id: @item_1.id, status: 'packaged')
       create(:invoice_item, unit_price: 41056, quantity: 15, invoice_id: @invoice_1.id, item_id: @item_2.id, status: 'shipped')
+      create(:invoice_item, unit_price: 1000, quantity: 4, invoice_id: @invoice_1.id, item_id: @item_3.id, status: 'shipped')
       create(:invoice_item, unit_price: 74241, quantity: 13, invoice_id: @invoice_2.id, item_id: @item_3.id, status: 'pending')
       create(:invoice_item, unit_price: 93564, quantity: 10, invoice_id: @invoice_2.id, item_id: @item_4.id, status: 'shipped')
       create(:invoice_item, unit_price: 31035, quantity: 19, invoice_id: @invoice_3.id, item_id: @item_5.id, status: 'pending')
@@ -71,11 +78,21 @@ RSpec.describe Invoice, type: :model do
 
     describe '.total_revenue' do
       it 'returns the total revenue for an invoice formatted to dollars and cents' do
-        expect(@invoice_1.total_revenue).to eq("9346.62")
+        expect(@invoice_1.total_revenue).to eq("9386.62")
         expect(@invoice_2.total_revenue).to eq("19007.73")
         expect(@invoice_3.total_revenue).to eq("5896.65")
         expect(@invoice_4.total_revenue).to eq("7172.88")
         expect(@invoice_5.total_revenue).to eq("947.41")
+      end
+    end
+
+    describe '.bulk_discount_total_revenue' do
+      it 'returns the total revenue for an invoice with applied bulk discounts formatted to dollars' do
+        expect(@invoice_1.bulk_discount_total_revenue).to eq("5669.78")
+        expect(@invoice_2.bulk_discount_total_revenue).to eq("12355.02")
+        expect(@invoice_3.bulk_discount_total_revenue).to eq("2948.33")
+        expect(@invoice_4.bulk_discount_total_revenue).to eq("4662.37")
+        expect(@invoice_5.bulk_discount_total_revenue).to eq("947.41")
       end
     end
     
