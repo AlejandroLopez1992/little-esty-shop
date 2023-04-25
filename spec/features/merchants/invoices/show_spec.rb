@@ -47,6 +47,8 @@ let!(:invoice_item_5) { create(:invoice_item, item_id: item_5.id, invoice_id: in
 let!(:invoice_item_6) { create(:invoice_item, item_id: item_6.id, invoice_id: invoice_6.id, status: 2, unit_price: 999, quantity: 12) }
 let!(:invoice_item_7) { create(:invoice_item, item_id: item_9.id, invoice_id: invoice_7.id, status: 1) }
 let!(:invoice_item_8) { create(:invoice_item, item_id: item_9.id, invoice_id: invoice_6.id, status: 1, unit_price: 8800, quantity: 10) }
+let!(:invoice_item_9) { create(:invoice_item, item_id: item_9.id, invoice_id: invoice_3.id, status: 1, unit_price: 8800, quantity: 4) }
+
 
 let!(:inv_1_transaction_s) { create_list(:transaction, 10, result: 1, invoice_id: invoice_1.id) }
 let!(:inv_1_transaction_f) { create_list(:transaction, 5, result: 0, invoice_id: invoice_1.id) }
@@ -122,6 +124,48 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
         expect(page).to have_content(invoice_item_8.status)
         expect(page).to have_content(invoice_item_8.quantity)
         expect(page).to have_content(invoice_item_8.format_unit_price)
+      end
+    end
+
+    describe 'link to applied discount' do
+      it 'invoice item displays link to applied bulk discount show page' do
+        visit merchant_invoice_path(merchant, invoice_1.id)
+
+        within("#items-#{invoice_item_1.item_id}") do
+          expect(page).to have_link("Green Special")
+
+          click_link("Green Special")
+          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_1))
+        end
+
+        visit merchant_invoice_path(merchant_1, invoice_6.id)
+
+        within("#items-#{invoice_item_6.item_id}") do
+          expect(page).to have_link("Red Special")
+
+          click_link("Red Special")
+          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_2))
+        end
+
+        within("#items-#{invoice_item_8.item_id}") do
+          expect(page).to have_link("Blue Special")
+
+          click_link("Blue Special")
+          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_4))
+        end
+      end
+
+      it 'if no bulk discount applied to this invoice item "No bulk discount applied" appears' do
+        visit merchant_invoice_path(merchant, invoice_3.id)
+
+        within("#items-#{invoice_item_9.item_id}") do
+          expect(page).to_not have_link("Green Special")
+          expect(page).to_not have_link("Red Special")
+          expect(page).to_not have_link("Blue Special")
+          expect(page).to_not have_link("Yellow Special")
+
+          expect(page).to have_content("No bulk discount applied")
+        end
       end
     end
 
