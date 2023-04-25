@@ -23,4 +23,12 @@ class InvoiceItem < ApplicationRecord
     .order("bulk_discounts.quantity_threshold DESC")
     .first
   end
+
+  def applied_bulk_discount_name
+    applied_bulk_discount.name
+  end
+
+  def applied_bulk_discount_merchant
+    applied_bulk_discount.merchant
+  end
 end

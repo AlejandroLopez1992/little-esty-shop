@@ -135,7 +135,7 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
           expect(page).to have_link("Green Special")
 
           click_link("Green Special")
-          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_1))
+          expect(current_path).to eq(merchant_bulk_discount_path(merchant, bulk_discount_1))
         end
 
         visit merchant_invoice_path(merchant_1, invoice_6.id)
@@ -144,14 +144,15 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
           expect(page).to have_link("Red Special")
 
           click_link("Red Special")
-          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_2))
+          expect(current_path).to eq(merchant_bulk_discount_path(merchant, bulk_discount_2))
         end
+        visit merchant_invoice_path(merchant_1, invoice_6.id)
 
         within("#items-#{invoice_item_8.item_id}") do
           expect(page).to have_link("Blue Special")
 
           click_link("Blue Special")
-          expect(current_path).to eq(merchant_bulk_discount_path(bulk_discount_4))
+          expect(current_path).to eq(merchant_bulk_discount_path(merchant_1, bulk_discount_4))
         end
       end
 
@@ -163,7 +164,7 @@ let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id:
           expect(page).to_not have_link("Red Special")
           expect(page).to_not have_link("Blue Special")
           expect(page).to_not have_link("Yellow Special")
-
+        
           expect(page).to have_content("No bulk discount applied")
         end
       end

@@ -68,5 +68,17 @@ RSpec.describe InvoiceItem, type: :model do
         expect(invoice_item_5.applied_bulk_discount).to eq(nil)
       end
     end
+
+    describe '#applied_bulk_discount_name' do
+      it 'returns the name of the the applied discount' do
+        expect(invoice_item_4.applied_bulk_discount_name).to eq("Red Special")
+      end
+    end
+
+    describe '#applied_bulk_discount_merchant' do
+      it 'returns the merchant who this bulk discount belongs to' do
+        expect(invoice_item_4.applied_bulk_discount_merchant).to eq(bulk_discount_2.merchant)
+      end
+    end
   end
 end
