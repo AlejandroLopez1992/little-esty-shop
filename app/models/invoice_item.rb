@@ -13,4 +13,22 @@ class InvoiceItem < ApplicationRecord
   def items_name
     item.name
   end
+
+  def applied_bulk_discount
+    BulkDiscount.joins(merchant: [items: :invoice_items])
+    .select("bulk_discounts.*")
+    .where("items.merchant_id = bulk_discounts.merchant_id AND 
+     invoice_items.quantity >= bulk_discounts.quantity_threshold
+     AND invoice_items.id = ?", self.id)
+    .order("bulk_discounts.quantity_threshold DESC")
+    .first
+  end
+
+  def applied_bulk_discount_name
+    applied_bulk_discount.name
+  end
+
+  def applied_bulk_discount_merchant
+    applied_bulk_discount.merchant
+  end
 end
