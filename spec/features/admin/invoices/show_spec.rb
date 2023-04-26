@@ -1,7 +1,6 @@
-# spec/features/admin/invoices/show_spec.rb
 require 'rails_helper'
 
-RSpec.describe 'admin_invoice_show3333', type: :feature do
+RSpec.describe 'admin_invoice_show', type: :feature do
   describe 'As an admin, when I visit the admin invoice show page' do
     before(:each) do
       @merchant = create(:merchant)
@@ -21,6 +20,10 @@ RSpec.describe 'admin_invoice_show3333', type: :feature do
       @item_5 = create(:item, merchant_id: @merchant.id)
       @item_6 = create(:item, merchant_id: @merchant.id)
       @item_7 = create(:item, merchant_id: @merchant.id)
+
+      @bulk_discount_1 = create(:bulk_discount, merchant_id: @merchant.id, name: "Green Special", percentage_discount: 20, quantity_threshold: 5)
+      @bulk_discount_2 = create(:bulk_discount, merchant_id: @merchant.id, name: "Red Special", percentage_discount: 35, quantity_threshold: 10)
+      @bulk_discount_3 = create(:bulk_discount, merchant_id: @merchant.id, name: "Yellow Special", percentage_discount: 50, quantity_threshold: 15)
 
       static_time_1 = Time.zone.parse('2023-04-13 00:50:37')
       static_time_2 = Time.zone.parse('2023-04-12 00:50:37')
@@ -43,8 +46,8 @@ RSpec.describe 'admin_invoice_show3333', type: :feature do
       create_list(:transaction, 2, result: 'success', invoice_id: @invoice_7.id)
       create_list(:transaction, 5, result: 'failed', invoice_id: @invoice_7.id)
 
-      create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: 'packaged')
-      create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: 'shipped')
+      create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, status: 'packaged', quantity: 15)
+      create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, status: 'shipped', quantity: 15)
       create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, status: 'pending')
       create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_4.id, status: 'shipped')
       create(:invoice_item, invoice_id: @invoice_3.id, item_id: @item_5.id, status: 'pending')
@@ -83,8 +86,17 @@ RSpec.describe 'admin_invoice_show3333', type: :feature do
     end
 
     it 'displays the total revenue that will be generated from this invoice' do
+      
       within("div#total_revenue") do
         expect(page).to have_content(@invoice_1.total_revenue)
+      end
+    end
+
+    it 'displays the total revenue generated when bulk discount is applied' do
+      
+      within("div#total_revenue") do
+        expect(@invoice_1.total_revenue.to_i.round(2)).to eq(@invoice_1.bulk_discount_total_revenue.to_i*2.round(2))
+        expect(page).to have_content(@invoice_1.bulk_discount_total_revenue)
       end
     end
 

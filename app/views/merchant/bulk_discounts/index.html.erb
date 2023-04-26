@@ -1,0 +1,32 @@
+<h2><%= @merchant.name %>'s Bulk Discount Index</h2>
+
+<%= content_tag :div, id: "bulk_discount_create" do %>
+  <%= link_to "Create Bulk discount", new_merchant_bulk_discount_path(@merchant) %>
+<% end %>
+
+<div class="bulk_discount_column">
+  <%= content_tag :div, id: "bulk_discounts" do %>
+    <% @merchant.bulk_discounts.each do |bulk_discount| %>
+    <ul>
+      <li id="bulk_discount_<%= bulk_discount.id %>">
+        <%= link_to bulk_discount.name, merchant_bulk_discount_path(@merchant, bulk_discount) %>- 
+        Percentage Discount: <%= bulk_discount.percentage_discount %>% ,
+        Quantity Threshold: <%= bulk_discount.quantity_threshold %>, 
+        <%= link_to "Delete",  merchant_bulk_discount_path(@merchant, bulk_discount), method: :delete %>
+      </li>
+    </ul>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="holidays">
+  <%= content_tag :div, id: "upcoming_holidays" do %>
+  <h3>Upcoming Holidays:</h3>
+    <li>First Holiday: <%= @holidays.first_upcoming_holiday_name %></li>
+    <li>First Holiday Date: <%= @holidays.first_upcoming_holiday_date %></li>
+    <li>Second Holiday: <%= @holidays.second_upcoming_holiday_name %></li>
+    <li>Second Holiday Date: <%= @holidays.second_upcoming_holiday_date %></li>
+    <li>Third Holiday: <%= @holidays.third_upcoming_holiday_name %></li>
+    <li>Third Holiday Date: <%= @holidays.third_upcoming_holiday_date %></li>
+  <% end %>
+</div>

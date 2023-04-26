@@ -7,6 +7,7 @@ RSpec.describe Merchant, type: :model do
     it { should have_many(:invoices).through(:invoice_items)}
     it { should have_many(:customers).through(:invoices)}
     it { should have_many(:transactions).through(:invoices)}
+    it { should have_many :bulk_discounts }
   end
 
   describe 'validations' do
@@ -255,7 +256,11 @@ RSpec.describe Merchant, type: :model do
     let!(:inv_5_transaction_s) { create_list(:transaction, 11, result: 1, invoice_id: invoice_5.id) }
     let!(:inv_6_transaction_s) { create_list(:transaction, 8, result: 1, invoice_id: invoice_6.id) }
     let!(:inv_7_transaction_f) { create_list(:transaction, 60, result: 0, invoice_id: invoice_7.id)}
-    
+
+    let!(:bulk_discount_1) { create(:bulk_discount, merchant_id: merchant.id) }
+    let!(:bulk_discount_2) { create(:bulk_discount, merchant_id: merchant.id) }
+    let!(:bulk_discount_3) { create(:bulk_discount, merchant_id: merchant_1.id) }
+  
     describe '#top_five_customers' do
       it '#customers retrieves five customers with the highest number of successful transactions from highest to lowest' do
         expect(merchant.top_five_customers).to eq([customer_5, customer_1, customer_6, customer_3, customer_2])
