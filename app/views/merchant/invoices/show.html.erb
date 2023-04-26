@@ -3,6 +3,7 @@
 <br>
 <ul><b>Created on:</b> <%= @invoice.format_time_stamp %></ul>
 <ul><b>Total Revenue:</b> $<%= @invoice.total_revenue %></ul>
+<ul><b>Total Bulk Discounted Revenue:</b> $<%= @invoice.bulk_discount_total_revenue %></ul>
 <ul><h2>Customer:</h2>
 <ul style="font-size:20px;"><%= @invoice.customer_full_name%></ul>
 <ul style="font-size:20px;">123 Main St.</ul>
@@ -28,6 +29,7 @@ table, th, td {
     <th style="background-color:DarkGrey; color:White"><center>Quantity</th>
     <th style="background-color:DarkGrey; color:White"><center>Unit Price</th>
     <th style="background-color:DarkGrey; color:White"><center>Status</th>
+    <th style="background-color:DarkGrey; color:White"><center>Applied Bulk Discount</th>
   </tr>
   <% @invoice.invoice_items.each do |invoice_item| %>
     <tr id="items-<%= invoice_item.item.id %>">
@@ -39,6 +41,12 @@ table, th, td {
         <%= form.label :status, hidden: true %>
         <%= form.select :status, options_for_select([["pending", :pending], [:packaged, "packaged"], [:shipped, "shipped"]], invoice_item.status)%>
         <%= form.submit "Update Item Status", style: "background-color:Black; font-size:12px; color:White;"%>
+        <td style="background-color:LightGrey;"><center><%= 
+        if invoice_item.applied_bulk_discount == nil
+         "No bulk discount applied"
+        else
+          link_to invoice_item.applied_bulk_discount_name, merchant_bulk_discount_path(invoice_item.applied_bulk_discount_merchant, invoice_item.applied_bulk_discount) 
+        end %></td>
         <% end %> 
         </td>
     </tr>

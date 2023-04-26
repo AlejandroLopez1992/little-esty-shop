@@ -24,4 +24,19 @@ class Invoice < ApplicationRecord
   def total_revenue
     invoice_items.sum("(quantity * unit_price )/ 100.0").round(2).to_s
   end
+
+  def bulk_discount_total_revenue
+    selected_invoice_items = InvoiceItem.find_by_sql("SELECT * FROM (SELECT ROW_NUMBER () OVER(PARTITION BY invoice_items.id ORDER BY bulk_discounts.quantity_threshold DESC) AS row_number,
+    invoice_items.*, bulk_discounts.*
+    FROM invoice_items
+    LEFT JOIN items ON invoice_items.item_id = items.id
+    LEFT JOIN bulk_discounts ON items.merchant_id = bulk_discounts.merchant_id AND invoice_items.quantity >= bulk_discounts.quantity_threshold
+    WHERE invoice_items.invoice_id = #{self.id}) AS joined_table WHERE joined_table.row_number = 1")
+
+    invoice_items_total_revenue = selected_invoice_items.map do |invoice_item|
+      invoice_item.quantity * invoice_item.unit_price * (1 - invoice_item.percentage_discount.to_f / 100)
+    end
+
+    (invoice_items_total_revenue.sum/100).round(2).to_s
+  end
 end
