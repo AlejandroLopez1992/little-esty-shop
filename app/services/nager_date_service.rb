@@ -6,6 +6,6 @@ class NagerDateService
   end
 
   def holidays
-    get_url("https://date.nager.at/api/v3/CountryInfo/US")
+    get_url("https://date.nager.at/api/v3/NextPublicHolidays/US")
   end
 end

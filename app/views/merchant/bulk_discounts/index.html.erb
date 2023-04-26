@@ -18,3 +18,15 @@
     <% end %>
   <% end %>
 </div>
+
+<div class="holidays">
+  <%= content_tag :div, id: "upcoming_holidays" do %>
+  <h3>Upcoming Holidays:</h3>
+    <li>First Holiday: <%= @holidays.first_upcoming_holiday_name %></li>
+    <li>First Holiday Date: <%= @holidays.first_upcoming_holiday_date %></li>
+    <li>Second Holiday: <%= @holidays.second_upcoming_holiday_name %></li>
+    <li>Second Holiday Date: <%= @holidays.second_upcoming_holiday_date %></li>
+    <li>Third Holiday: <%= @holidays.third_upcoming_holiday_name %></li>
+    <li>Third Holiday Date: <%= @holidays.third_upcoming_holiday_date %></li>
+  <% end %>
+</div>

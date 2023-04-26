@@ -185,7 +185,7 @@ RSpec.describe 'Merchants Bulk Discount index page' do
   describe 'Upcoming Holidays' do
     it 'In section Upcoming Holidays the next three upcoming Holidays are displayed from the Nager.Date.API' do
       visit merchant_bulk_discounts_path(merchant)
-
+    
       within("#upcoming_holidays") do
         expect(page).to have_content("Upcoming Holidays:")
 
